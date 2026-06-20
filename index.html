@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JIBAS Keuangan</title>
+  <link rel="stylesheet" href="/static/css/tokens.css" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__brand-title">JIBAS Keuangan</div>
+        <div class="sidebar__brand-sub">Sistem Informasi Keuangan Sekolah</div>
+      </div>
+      <nav class="sidebar__nav" id="sidebar-nav"></nav>
+      <div class="sidebar__footer">v0.1.0 — modular SPA</div>
+    </aside>
+    <main class="main">
+      <div class="main__content" id="main-content"></div>
+    </main>
+  </div>
+
+  <!-- Core -->
+  <script src="/static/js/core/api-client.js"></script>
+  <script src="/static/js/core/router.js"></script>
+  <!-- Komponen reusable -->
+  <script src="/static/js/components/table-renderer.js"></script>
+  <script src="/static/js/components/form-builder.js"></script>
+  <script src="/static/js/components/modal.js"></script>
+  <!-- Modul (tambahkan baris baru di sini tiap modul baru selesai) -->
+  <script src="/static/js/modules/referensi.js"></script>
+  <!-- Bootstrap -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
