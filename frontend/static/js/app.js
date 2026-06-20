@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.router = new Router(content, nav);
 
   router.register('referensi', ReferensiModule, 'Referensi', '📘');
-  // router.register('siswa', SiswaModule, 'Siswa & Calon Siswa', '🎓');
+  router.register('siswa', SiswaModule, 'Siswa & Calon Siswa', '🎓');
   // router.register('penerimaan', PenerimaanModule, 'Penerimaan', '💰');
   // router.register('pengeluaran', PengeluaranModule, 'Pengeluaran', '💸');
   // router.register('jurnal-umum', JurnalUmumModule, 'Jurnal Umum', '📝');
