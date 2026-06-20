@@ -56,6 +56,18 @@ frontend/
     modules/             -> 1 file per modul, extend pola yang sama (lihat referensi.js)
 ```
 
+## Deploy ke Railway
+
+1. Buat project baru di Railway, tambahkan plugin **PostgreSQL** (Railway otomatis
+   menyediakan env var `DATABASE_URL`).
+2. Hubungkan repo ini sebagai service. Railway akan memakai `railway.json` /
+   `Procfile` di root repo, yang sudah diatur untuk:
+   - install dependency dari `backend/requirements.txt`
+   - jalankan `alembic upgrade head` (migrasi schema) sebelum start
+   - jalankan `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+3. Tidak perlu env var tambahan selain `DATABASE_URL` (sudah otomatis dari plugin Postgres).
+4. Setelah deploy sukses, buka domain Railway-nya — frontend SPA + API jalan dari satu service.
+
 ## Menambah modul baru
 
 Ikuti pola `ReferensiModule` di `frontend/static/js/modules/`:

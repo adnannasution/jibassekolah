@@ -1,9 +1,13 @@
 """Entrypoint aplikasi JIBAS Keuangan (versi modern)."""
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.routers import referensi
+
+FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 app = FastAPI(title="JIBAS Keuangan", version="0.1.0")
 
@@ -23,4 +27,4 @@ def health_check():
 
 
 # Serve frontend SPA (file statis) -- dipasang terakhir supaya tidak menabrak /api/*
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
