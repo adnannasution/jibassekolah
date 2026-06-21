@@ -14,7 +14,6 @@ class LaporanModule {
     this._tahunBukuId = null;
     this._akunIdBukuBesar = null;
     this._pgBukuBesar = { cari: '', halaman: 1 };
-    this._pgAuditLog = { cari: '', halaman: 1 };
   }
 
   async render() {
@@ -36,17 +35,15 @@ class LaporanModule {
         ${this._renderTabButton('neraca', 'Neraca')}
         ${this._renderTabButton('perubahan-modal', 'Perubahan Modal')}
         ${this._renderTabButton('arus-kas', 'Arus Kas')}
-        ${this._renderTabButton('audit-log', 'Audit Perubahan Data')}
       </div>
       <div class="panel">
         <div class="panel__header" style="display:flex; gap: var(--space-3); align-items:center; flex-wrap: wrap; justify-content: space-between;">
           <div style="display:flex; gap: var(--space-3); align-items:center; flex-wrap: wrap;">
-            ${this.tab !== 'audit-log' ? `
-              <label class="text-muted">Tahun Buku:
-                <select id="filter-tahun-buku">
-                  ${tahunBuku.map(t => `<option value="${t.id}" ${t.id === this._tahunBukuId ? 'selected' : ''}>${t.tahun_buku} (${t.status})</option>`).join('')}
-                </select>
-              </label>` : ''}
+            <label class="text-muted">Tahun Buku:
+              <select id="filter-tahun-buku">
+                ${tahunBuku.map(t => `<option value="${t.id}" ${t.id === this._tahunBukuId ? 'selected' : ''}>${t.tahun_buku} (${t.status})</option>`).join('')}
+              </select>
+            </label>
             ${this.tab === 'buku-besar' ? `
               <label class="text-muted">Akun:
                 <select id="filter-akun"></select>
@@ -98,7 +95,6 @@ class LaporanModule {
       neraca: 'Neraca',
       'perubahan-modal': 'Perubahan Modal',
       'arus-kas': 'Arus Kas',
-      'audit-log': 'Audit Perubahan Data',
     }[this.tab];
   }
 
@@ -119,7 +115,7 @@ class LaporanModule {
 
   async _muatData() {
     const target = this.container.querySelector('#tab-content');
-    if (this.tab !== 'audit-log' && !this._tahunBukuId) {
+    if (!this._tahunBukuId) {
       target.innerHTML = '<div class="empty-state">Belum ada Tahun Buku. Buat dulu di modul Referensi.</div>';
       return;
     }
@@ -215,21 +211,6 @@ class LaporanModule {
           ], ak.akun, { emptyMessage: 'Belum ada akun kas teridentifikasi.' })}
           <p><strong>Total Mutasi Bersih: ${TableRenderer.formatUang(ak.total_mutasi_bersih)}</strong></p>
         `;
-      } else if (this.tab === 'audit-log') {
-        const qs = new URLSearchParams({ halaman: this._pgAuditLog.halaman, ukuran_halaman: 20 });
-        if (this._pgAuditLog.cari) qs.set('cari', this._pgAuditLog.cari);
-        const hasil = await this.api.get(`/laporan/audit-log?${qs.toString()}`);
-        target.innerHTML = Pagination.renderControls({
-          cari: this._pgAuditLog.cari, halaman: hasil.halaman, total: hasil.total, ukuranHalaman: hasil.ukuran_halaman,
-          searchPlaceholder: 'Cari tabel / alasan...',
-        }) + TableRenderer.render([
-          { key: 'tabel', label: 'Tabel' },
-          { key: 'record_id', label: 'ID Record' },
-          { key: 'aksi', label: 'Aksi', type: 'badge', badgeMap: { EDIT: 'warning', HAPUS: 'danger' } },
-          { key: 'alasan', label: 'Alasan' },
-          { key: 'created_at', label: 'Waktu' },
-        ], hasil.items, { emptyMessage: 'Belum ada perubahan/pembatalan yang tercatat.' });
-        Pagination.attach(target, this._pgAuditLog, () => this._muatData());
       }
     } catch (err) {
       target.innerHTML = `<div class="empty-state">Gagal memuat data: ${err.message}</div>`;

@@ -3,11 +3,11 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.core import laporan as laporan_core
 from app.database import get_db
-from app.models.audit import AuditLog
+from app.models.audit import AksiAudit, AuditLog
 from app.schemas.common import HalamanOut
 from app.schemas.laporan import (
     ArusKasOut, AuditLogOut, BukuBesarBaris, NeracaOut, NeracaPercobaanBaris,
@@ -75,16 +75,22 @@ def get_arus_kas(
 def get_audit_log(
     tabel: Optional[str] = None,
     record_id: Optional[int] = None,
+    aksi: Optional[AksiAudit] = None,
+    user_id: Optional[int] = None,
     cari: Optional[str] = None,
     halaman: int = 1,
     ukuran_halaman: int = 20,
     db: Session = Depends(get_db),
 ):
-    query = db.query(AuditLog)
+    query = db.query(AuditLog).options(joinedload(AuditLog.user))
     if tabel is not None:
         query = query.filter(AuditLog.tabel == tabel)
     if record_id is not None:
         query = query.filter(AuditLog.record_id == record_id)
+    if aksi is not None:
+        query = query.filter(AuditLog.aksi == aksi)
+    if user_id is not None:
+        query = query.filter(AuditLog.user_id == user_id)
     if cari:
         kata = f"%{cari}%"
         query = query.filter(or_(AuditLog.tabel.ilike(kata), AuditLog.alasan.ilike(kata)))
@@ -96,4 +102,13 @@ def get_audit_log(
         .limit(ukuran_halaman)
         .all()
     )
-    return {"items": rows, "total": total, "halaman": halaman, "ukuran_halaman": ukuran_halaman}
+    items = [
+        {
+            "id": r.id, "tabel": r.tabel, "record_id": r.record_id, "aksi": r.aksi,
+            "data_lama": r.data_lama, "data_baru": r.data_baru, "alasan": r.alasan,
+            "user_id": r.user_id, "user_nama": r.user.nama if r.user else None,
+            "user_login": r.user.login if r.user else None, "created_at": r.created_at,
+        }
+        for r in rows
+    ]
+    return {"items": items, "total": total, "halaman": halaman, "ukuran_halaman": ukuran_halaman}

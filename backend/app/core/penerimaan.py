@@ -19,7 +19,9 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from app.core.audit import catat_audit
 from app.core.ledger import BarisJurnal, posting_jurnal
+from app.models.audit import AksiAudit
 from app.models.ledger import SumberModul
 from app.models.penerimaan import (
     JenisPembayaran, PembayaranTagihan, StatusPembayaran, StatusTagihan, Tagihan,
@@ -108,6 +110,10 @@ def buat_tagihan(db: Session, request: BuatTagihanRequest, petugas_id: int) -> T
     db.add(tagihan)
     db.flush()
     header.sumber_id = tagihan.id
+    catat_audit(
+        db, tabel="tagihan", record_id=tagihan.id, aksi=AksiAudit.BUAT, user_id=petugas_id,
+        data_baru={"no_tagihan": tagihan.no_tagihan, "jumlah_tagihan": str(tagihan.jumlah_tagihan), "status": tagihan.status.value},
+    )
     return tagihan
 
 
@@ -169,5 +175,10 @@ def bayar_tagihan(
     tagihan.sisa = tagihan.sisa - jumlah_bayar
     if tagihan.sisa <= 0:
         tagihan.status = StatusTagihan.LUNAS
+
+    catat_audit(
+        db, tabel="pembayaran_tagihan", record_id=pembayaran.id, aksi=AksiAudit.BUAT, user_id=petugas_id,
+        data_baru={"tagihan_id": tagihan.id, "jumlah_bayar": str(jumlah_bayar)},
+    )
 
     return pembayaran

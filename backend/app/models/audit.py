@@ -4,14 +4,17 @@ Audit trail generik. Dipakai semua modul yang butuh jejak perubahan
 Data lama/baru disimpan sebagai JSON snapshot baris yang diubah/dihapus.
 """
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, func, JSON, Enum
+from sqlalchemy.orm import relationship
 import enum
 
 from app.database import Base
 
 
 class AksiAudit(str, enum.Enum):
+    BUAT = "BUAT"
     EDIT = "EDIT"
     HAPUS = "HAPUS"
+    LOGIN = "LOGIN"
 
 
 class AuditLog(Base):
@@ -26,3 +29,5 @@ class AuditLog(Base):
     alasan = Column(Text, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+
+    user = relationship("User")

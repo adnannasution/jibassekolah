@@ -10,6 +10,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
+from app.core.audit import catat_audit
 from app.core.ledger import BarisJurnal, batalkan_jurnal, posting_jurnal
 from app.models.audit import AksiAudit, AuditLog
 from app.models.ledger import JurnalHeader, StatusJurnal, SumberModul
@@ -29,7 +30,7 @@ class BuatJurnalUmumRequest:
 
 
 def buat_jurnal_umum(db: Session, request: BuatJurnalUmumRequest, petugas_id: int) -> JurnalHeader:
-    return posting_jurnal(
+    header = posting_jurnal(
         db=db,
         departemen_id=request.departemen_id,
         tahun_buku_id=request.tahun_buku_id,
@@ -39,6 +40,11 @@ def buat_jurnal_umum(db: Session, request: BuatJurnalUmumRequest, petugas_id: in
         petugas_id=petugas_id,
         baris=request.baris,
     )
+    catat_audit(
+        db, tabel="jurnal_header", record_id=header.id, aksi=AksiAudit.BUAT, user_id=petugas_id,
+        data_baru={"no_jurnal": header.no_jurnal, "keterangan": header.keterangan},
+    )
+    return header
 
 
 def batalkan_jurnal_umum(db: Session, jurnal_header_id: int, alasan: str, user_id: int) -> JurnalHeader:

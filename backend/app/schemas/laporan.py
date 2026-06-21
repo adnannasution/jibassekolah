@@ -85,6 +85,8 @@ class AuditLogOut(BaseModel):
     data_baru: Optional[dict] = None
     alasan: Optional[str] = None
     user_id: int
+    user_nama: Optional[str] = None
+    user_login: Optional[str] = None
     created_at: datetime
 
     class Config:
