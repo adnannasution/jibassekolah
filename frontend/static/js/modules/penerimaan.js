@@ -189,7 +189,7 @@ class PenerimaanModule {
           { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
         ]),
         onSubmit: async (data, close) => {
-          await this.api.post(`/penerimaan/tagihan?petugas_id=1`, { // TODO: ganti ke user login saat modul Pengaturan jadi
+          await this.api.post(`/penerimaan/tagihan?petugas_id=${Auth.userId()}`, {
             siswa_id: Number(data.siswa_id),
             jenis_pembayaran_id: Number(data.jenis_pembayaran_id),
             departemen_id: Number(data.departemen_id),
@@ -228,7 +228,7 @@ class PenerimaanModule {
         { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
       ]),
       onSubmit: async (data, close) => {
-        await this.api.post(`/penerimaan/pembayaran?petugas_id=1`, { // TODO: ganti ke user login saat modul Pengaturan jadi
+        await this.api.post(`/penerimaan/pembayaran?petugas_id=${Auth.userId()}`, {
           tagihan_id: tagihanId,
           tahun_buku_id: aktif.id, // tahun buku AKTIF saat pembayaran terjadi, bukan tahun buku tagihan asal
           tanggal: data.tanggal,

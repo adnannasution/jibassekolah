@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.routers import inventory, jurnal_umum, laporan, pengeluaran, penerimaan, referensi, siswa
+from app.routers import inventory, jurnal_umum, laporan, pengaturan, pengeluaran, penerimaan, referensi, siswa
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
@@ -25,6 +25,7 @@ app.include_router(pengeluaran.router)
 app.include_router(jurnal_umum.router)
 app.include_router(laporan.router)
 app.include_router(inventory.router)
+app.include_router(pengaturan.router)
 
 
 @app.get("/api/health")

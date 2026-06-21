@@ -159,7 +159,7 @@ class PengeluaranModule {
           { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
         ]),
         onSubmit: async (data, close) => {
-          await this.api.post(`/pengeluaran/pengeluaran?petugas_id=1`, { // TODO: ganti ke user login saat modul Pengaturan jadi
+          await this.api.post(`/pengeluaran/pengeluaran?petugas_id=${Auth.userId()}`, {
             jenis_pengeluaran_id: Number(data.jenis_pengeluaran_id),
             departemen_id: Number(data.departemen_id),
             tahun_buku_id: aktif.id,
@@ -178,7 +178,7 @@ class PengeluaranModule {
     const alasan = window.prompt('Alasan pembatalan pengeluaran ini:');
     if (!alasan) return;
     try {
-      await this.api.post(`/pengeluaran/pengeluaran/${pengeluaranId}/batalkan?user_id=1`, { alasan }); // TODO: ganti ke user login saat modul Pengaturan jadi
+      await this.api.post(`/pengeluaran/pengeluaran/${pengeluaranId}/batalkan?user_id=${Auth.userId()}`, { alasan });
       this._muatData();
     } catch (err) {
       window.alert(`Gagal membatalkan: ${err.message}`);

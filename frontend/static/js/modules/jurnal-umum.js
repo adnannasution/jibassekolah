@@ -143,7 +143,7 @@ class JurnalUmumModule {
           throw new Error(`Debit (${totalDebit}) dan Kredit (${totalKredit}) belum balance.`);
         }
 
-        await this.api.post(`/jurnal-umum/jurnal?petugas_id=1`, { // TODO: ganti ke user login saat modul Pengaturan jadi
+        await this.api.post(`/jurnal-umum/jurnal?petugas_id=${Auth.userId()}`, {
           departemen_id: Number(overlay.querySelector('#ju-departemen').value),
           tahun_buku_id: aktif.id,
           tanggal: overlay.querySelector('#ju-tanggal').value,
@@ -197,7 +197,7 @@ class JurnalUmumModule {
     const alasan = window.prompt('Alasan pembatalan jurnal ini:');
     if (!alasan) return;
     try {
-      await this.api.post(`/jurnal-umum/jurnal/${jurnalHeaderId}/batalkan?user_id=1`, { alasan }); // TODO: ganti ke user login saat modul Pengaturan jadi
+      await this.api.post(`/jurnal-umum/jurnal/${jurnalHeaderId}/batalkan?user_id=${Auth.userId()}`, { alasan });
       this._muatData();
     } catch (err) {
       window.alert(`Gagal membatalkan: ${err.message}`);
