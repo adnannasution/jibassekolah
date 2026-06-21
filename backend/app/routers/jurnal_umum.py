@@ -2,6 +2,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.core.jurnal_umum import (
@@ -10,16 +11,20 @@ from app.core.jurnal_umum import (
 from app.core.ledger import BarisJurnal, JurnalTidakBalanceError, TahunBukuTutupError
 from app.database import get_db
 from app.models.ledger import JurnalHeader
+from app.schemas.common import HalamanOut
 from app.schemas.jurnal_umum import BatalkanJurnalRequest, JurnalHeaderOut, JurnalUmumCreate
 
 router = APIRouter(prefix="/api/jurnal-umum", tags=["jurnal-umum"])
 
 
-@router.get("/jurnal", response_model=List[JurnalHeaderOut])
+@router.get("/jurnal", response_model=HalamanOut[JurnalHeaderOut])
 def list_jurnal(
     departemen_id: Optional[int] = None,
     tahun_buku_id: Optional[int] = None,
     sumber_modul: Optional[str] = None,
+    cari: Optional[str] = None,
+    halaman: int = 1,
+    ukuran_halaman: int = 20,
     db: Session = Depends(get_db),
 ):
     query = db.query(JurnalHeader)
@@ -29,7 +34,18 @@ def list_jurnal(
         query = query.filter(JurnalHeader.tahun_buku_id == tahun_buku_id)
     if sumber_modul is not None:
         query = query.filter(JurnalHeader.sumber_modul == sumber_modul)
-    return query.order_by(JurnalHeader.tanggal.desc()).all()
+    if cari:
+        kata = f"%{cari}%"
+        query = query.filter(or_(JurnalHeader.no_jurnal.ilike(kata), JurnalHeader.keterangan.ilike(kata)))
+
+    total = query.count()
+    rows = (
+        query.order_by(JurnalHeader.tanggal.desc(), JurnalHeader.id.desc())
+        .offset((halaman - 1) * ukuran_halaman)
+        .limit(ukuran_halaman)
+        .all()
+    )
+    return {"items": rows, "total": total, "halaman": halaman, "ukuran_halaman": ukuran_halaman}
 
 
 @router.post("/jurnal", response_model=JurnalHeaderOut)
