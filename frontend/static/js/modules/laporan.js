@@ -37,17 +37,20 @@ class LaporanModule {
         ${this._renderTabButton('audit-log', 'Audit Perubahan Data')}
       </div>
       <div class="panel">
-        <div class="panel__header" style="display:flex; gap: var(--space-3); align-items:center; flex-wrap: wrap;">
-          ${this.tab !== 'audit-log' ? `
-            <label class="text-muted">Tahun Buku:
-              <select id="filter-tahun-buku">
-                ${tahunBuku.map(t => `<option value="${t.id}" ${t.id === this._tahunBukuId ? 'selected' : ''}>${t.tahun_buku} (${t.status})</option>`).join('')}
-              </select>
-            </label>` : ''}
-          ${this.tab === 'buku-besar' ? `
-            <label class="text-muted">Akun:
-              <select id="filter-akun"></select>
-            </label>` : ''}
+        <div class="panel__header" style="display:flex; gap: var(--space-3); align-items:center; flex-wrap: wrap; justify-content: space-between;">
+          <div style="display:flex; gap: var(--space-3); align-items:center; flex-wrap: wrap;">
+            ${this.tab !== 'audit-log' ? `
+              <label class="text-muted">Tahun Buku:
+                <select id="filter-tahun-buku">
+                  ${tahunBuku.map(t => `<option value="${t.id}" ${t.id === this._tahunBukuId ? 'selected' : ''}>${t.tahun_buku} (${t.status})</option>`).join('')}
+                </select>
+              </label>` : ''}
+            ${this.tab === 'buku-besar' ? `
+              <label class="text-muted">Akun:
+                <select id="filter-akun"></select>
+              </label>` : ''}
+          </div>
+          <button class="btn btn-outline btn-sm no-print" id="btn-cetak">🖨 Cetak / Export PDF</button>
         </div>
         <div class="panel__body" id="tab-content">
           <div class="empty-state">Memuat data...</div>
@@ -58,6 +61,7 @@ class LaporanModule {
     this.container.querySelectorAll('[data-tab]').forEach(btn => {
       btn.addEventListener('click', () => router.navigate(`laporan/${btn.dataset.tab}`));
     });
+    this.container.querySelector('#btn-cetak').addEventListener('click', () => this._cetakLaporanAktif());
 
     const filterTahun = this.container.querySelector('#filter-tahun-buku');
     if (filterTahun) {
@@ -209,6 +213,13 @@ class LaporanModule {
     } catch (err) {
       target.innerHTML = `<div class="empty-state">Gagal memuat data: ${err.message}</div>`;
     }
+  }
+
+  _cetakLaporanAktif() {
+    const tabContent = this.container.querySelector('#tab-content');
+    const tanggalCetak = new Date().toLocaleDateString('id-ID');
+    const titleHtml = `<h2>${this._judulTab()}</h2><p>Dicetak tanggal: ${tanggalCetak}</p>`;
+    PrintHelper.cetak(titleHtml, tabContent.innerHTML);
   }
 
   destroy() {

@@ -10,6 +10,7 @@ class PengeluaranModule {
     this._departemenCache = null;
     this._akunCache = null;
     this._tahunBukuCache = null;
+    this._usersCache = null;
   }
 
   async render() {
@@ -72,6 +73,11 @@ class PengeluaranModule {
     return daftar.find(t => t.status === 'AKTIF');
   }
 
+  async _muatUsers() {
+    if (!this._usersCache) this._usersCache = await this.api.get('/pengaturan/users');
+    return this._usersCache;
+  }
+
   async _muatData() {
     const target = this.container.querySelector('#tab-content');
     try {
@@ -91,13 +97,18 @@ class PengeluaranModule {
           { key: 'jumlah', label: 'Jumlah', type: 'uang' },
           { key: 'keterangan', label: 'Keterangan' },
           { key: 'status', label: 'Status', type: 'badge', badgeMap: { AKTIF: 'success', DIBATALKAN: 'danger' } },
-          { key: 'aksi', label: '', type: 'aksi', render: (row) => row.status === 'AKTIF'
-              ? `<button class="btn btn-outline btn-sm" data-batal="${row.id}">Batalkan</button>`
-              : '' },
-        ], data, { emptyMessage: 'Belum ada pengeluaran. Tambahkan dulu lewat tombol + Tambah.' });
+          { key: 'aksi', label: '', type: 'aksi', render: (row) => `
+              <button class="btn btn-outline btn-sm" data-cetak="${row.id}">Cetak Kuitansi</button>
+              ${row.status === 'AKTIF' ? `<button class="btn btn-outline btn-sm" data-batal="${row.id}">Batalkan</button>` : ''}
+            ` },
+        ], data, { emptyMessage: 'Belum ada pengeluaran. Tambahkan dulu lewat tombol + Tambah.', searchable: true, searchPlaceholder: 'Cari no. kuitansi/keterangan...' });
+        TableRenderer.attachSearch(target);
 
         target.querySelectorAll('[data-batal]').forEach(btn => {
           btn.addEventListener('click', () => this._batalkanPengeluaran(Number(btn.dataset.batal)));
+        });
+        target.querySelectorAll('[data-cetak]').forEach(btn => {
+          btn.addEventListener('click', () => this._cetakKuitansi(data.find(r => r.id === Number(btn.dataset.cetak))));
         });
       }
     } catch (err) {
@@ -183,6 +194,25 @@ class PengeluaranModule {
     } catch (err) {
       Modal.alert(`Gagal membatalkan: ${err.message}`);
     }
+  }
+
+  async _cetakKuitansi(row) {
+    const users = await this._muatUsers();
+    const petugas = users.find(u => u.id === row.petugas_id);
+    const titleHtml = `<h2>Kuitansi Pengeluaran</h2>`;
+    const bodyHtml = `
+      <table class="data-table">
+        <tbody>
+          <tr><td>No. Kuitansi</td><td><strong>${row.no_kuitansi}</strong></td></tr>
+          <tr><td>Tanggal</td><td>${row.tanggal}</td></tr>
+          <tr><td>Jenis Pengeluaran</td><td>${row.jenis_pengeluaran ? row.jenis_pengeluaran.nama : '-'}</td></tr>
+          <tr><td>Jumlah</td><td class="uang">${TableRenderer.formatUang(row.jumlah)}</td></tr>
+          <tr><td>Keterangan</td><td>${row.keterangan || '-'}</td></tr>
+          <tr><td>Petugas</td><td>${petugas ? petugas.nama : '-'}</td></tr>
+        </tbody>
+      </table>
+    `;
+    PrintHelper.cetak(titleHtml, bodyHtml);
   }
 
   destroy() {
