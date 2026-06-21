@@ -4,6 +4,8 @@
  * yang sudah ada untuk ReferensiModule.
  */
 document.addEventListener('DOMContentLoaded', () => {
+  Theme.terapkan();
+
   const content = document.getElementById('main-content');
   const nav = document.getElementById('sidebar-nav');
 

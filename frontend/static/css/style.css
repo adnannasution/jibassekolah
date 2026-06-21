@@ -26,7 +26,7 @@ a { color: var(--color-primary); }
   height: 100vh;
   flex-shrink: 0;
   background: var(--color-primary);
-  color: #EDF1F7;
+  color: var(--color-sidebar-text);
   display: flex;
   flex-direction: column;
 }
@@ -211,7 +211,7 @@ a { color: var(--color-primary); }
 .btn-outline { background: var(--color-surface); border-color: var(--color-border); color: var(--color-ink); }
 .btn-outline:hover { background: var(--color-surface-alt); border-color: var(--color-ink-faint); }
 .btn-danger { background: var(--color-danger-soft); color: var(--color-danger); }
-.btn-danger:hover { background: #f6d6d1; }
+.btn-danger:hover { background: var(--color-danger-soft); }
 .btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--text-xs); }
 
 /* ----- Badge status ----- */

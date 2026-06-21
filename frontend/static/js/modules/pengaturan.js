@@ -36,6 +36,7 @@ class PengaturanModule {
       <div class="tabs" style="display:flex; gap: var(--space-2); margin-bottom: var(--space-4); flex-wrap: wrap;">
         ${this._renderTabButton('pengguna', 'Pengguna & Role')}
         ${this._renderTabButton('log-aktivitas', 'Log Aktivitas')}
+        ${this._renderTabButton('tampilan', 'Tampilan')}
       </div>
       <div class="panel">
         <div class="panel__header" id="panel-header"></div>
@@ -53,7 +54,7 @@ class PengaturanModule {
   }
 
   _judulTab() {
-    return { pengguna: 'Pengguna & Role', 'log-aktivitas': 'Log Aktivitas' }[this.tab];
+    return { pengguna: 'Pengguna & Role', 'log-aktivitas': 'Log Aktivitas', tampilan: 'Tampilan' }[this.tab];
   }
 
   _renderTabButton(key, label) {
@@ -66,7 +67,51 @@ class PengaturanModule {
       await this._muatPengguna();
     } else if (this.tab === 'log-aktivitas') {
       await this._muatLogAktivitas();
+    } else if (this.tab === 'tampilan') {
+      await this._muatTampilan();
     }
+  }
+
+  // ===== Tab: Tampilan =====
+
+  _muatTampilan() {
+    const header = this.container.querySelector('#panel-header');
+    header.innerHTML = `<span class="text-muted">Pilih Preset Warna Tema</span>`;
+
+    const aktif = Theme.get();
+    const target = this.container.querySelector('#tab-content');
+
+    // Warna pratinjau per preset, mengikuti --color-primary yang didefinisikan di tokens.css.
+    const warnaPreset = {
+      default: '#122A4F',
+      hijau: '#1B4332',
+      maroon: '#5C1A2B',
+      'biru-laut': '#0B3D5C',
+    };
+
+    target.innerHTML = `
+      <div style="display:flex; gap: var(--space-4); flex-wrap: wrap;">
+        ${Theme.DAFTAR.map(t => {
+          const isAktif = t.key === aktif;
+          return `
+            <div class="panel" data-tema="${t.key}" style="width: 180px; cursor: pointer; border-color: ${isAktif ? 'var(--color-primary)' : 'var(--color-border)'}; border-width: ${isAktif ? '2px' : '1px'};">
+              <div style="height: 64px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; background: ${warnaPreset[t.key]};"></div>
+              <div style="padding: var(--space-3); display:flex; align-items:center; justify-content: space-between;">
+                <span style="font-weight:600;">${t.label}</span>
+                ${isAktif ? '<span style="color: var(--color-success);">✓</span>' : ''}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    target.querySelectorAll('[data-tema]').forEach(el => {
+      el.addEventListener('click', () => {
+        Theme.set(el.dataset.tema);
+        this._muatTampilan();
+      });
+    });
   }
 
   // ===== Tab: Pengguna & Role =====
@@ -238,11 +283,11 @@ class PengaturanModule {
         <div style="display:flex; gap: var(--space-4); flex-wrap: wrap;">
           <div style="flex:1; min-width: 200px;">
             <strong>Data Lama</strong>
-            <pre style="white-space:pre-wrap; background: var(--color-bg-muted, #f5f5f5); padding: var(--space-2); border-radius: var(--radius-sm);">${row.data_lama ? JSON.stringify(row.data_lama, null, 2) : '-'}</pre>
+            <pre style="white-space:pre-wrap; background: var(--color-bg-muted); padding: var(--space-2); border-radius: var(--radius-sm);">${row.data_lama ? JSON.stringify(row.data_lama, null, 2) : '-'}</pre>
           </div>
           <div style="flex:1; min-width: 200px;">
             <strong>Data Baru</strong>
-            <pre style="white-space:pre-wrap; background: var(--color-bg-muted, #f5f5f5); padding: var(--space-2); border-radius: var(--radius-sm);">${row.data_baru ? JSON.stringify(row.data_baru, null, 2) : '-'}</pre>
+            <pre style="white-space:pre-wrap; background: var(--color-bg-muted); padding: var(--space-2); border-radius: var(--radius-sm);">${row.data_baru ? JSON.stringify(row.data_baru, null, 2) : '-'}</pre>
           </div>
         </div>
       `,
