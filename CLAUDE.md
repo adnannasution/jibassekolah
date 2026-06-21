@@ -88,7 +88,10 @@ satu-satu lewat akun perantara) — cukup untuk MVP karena laporan tetap akurat
 
 ## Desain visual
 
-Token warna/tipografi ada di `frontend/static/css/tokens.css` — konsep
-"kertas dingin" (bukan cream hangat generik), navy primary + aksen
-brass/kuningan, serif Georgia buat heading, badge bergaya "stempel buku besar"
-(dashed border). Ikuti token yang sudah ada, jangan introduce palet baru per modul.
+Token warna/tipografi ada di `frontend/static/css/tokens.css` — tema
+profesional terang (bukan dark mode): latar abu-biru muda, navy tua
+(`--color-primary`) untuk sidebar/tombol utama, aksen emas (`--color-accent`)
+dipakai terbatas (garis aktif sidebar, fokus input, breadcrumb), tipografi
+sans-serif konsisten (tanpa serif Georgia), badge status pill rounded solid
+(bukan dashed). Ikuti token yang sudah ada, jangan introduce palet baru per
+modul.
