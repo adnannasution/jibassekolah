@@ -4,3 +4,6 @@ from app.models.ledger import JurnalHeader, JurnalDetail, SumberModul, StatusJur
 from app.models.siswa import Kelas, Siswa, KelompokCalonSiswa, CalonSiswa, StatusSiswa  # noqa: F401
 from app.models.user import User, TingkatPengguna  # noqa: F401
 from app.models.audit import AuditLog, AksiAudit  # noqa: F401
+from app.models.penerimaan import (  # noqa: F401
+    JenisPembayaran, Tagihan, PembayaranTagihan, StatusTagihan, StatusPembayaran,
+)
