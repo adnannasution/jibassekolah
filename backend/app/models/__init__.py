@@ -7,3 +7,6 @@ from app.models.audit import AuditLog, AksiAudit  # noqa: F401
 from app.models.penerimaan import (  # noqa: F401
     JenisPembayaran, Tagihan, PembayaranTagihan, StatusTagihan, StatusPembayaran,
 )
+from app.models.pengeluaran import (  # noqa: F401
+    JenisPengeluaran, Pengeluaran, StatusPengeluaran,
+)
