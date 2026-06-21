@@ -2,11 +2,11 @@
  * Modal — dialog generik. Dipakai untuk form tambah/edit di semua modul.
  */
 class Modal {
-  static open({ title, bodyHtml, onSubmit, submitLabel = 'Simpan' }) {
+  static open({ title, bodyHtml, onSubmit, submitLabel = 'Simpan', size = '' }) {
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
-      <div class="modal">
+      <div class="modal ${size === 'lg' ? 'modal--lg' : ''}">
         <div class="modal__header">
           <h2>${title}</h2>
           <button class="modal__close" type="button">&times;</button>

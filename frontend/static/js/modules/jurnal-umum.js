@@ -78,14 +78,14 @@ class JurnalUmumModule {
 
   _barisHtml(akunOptionsHtml) {
     return `
-      <div class="jurnal-baris" style="display:flex; gap:var(--space-2); margin-bottom:var(--space-2); align-items:center;">
-        <select class="jb-akun" style="flex:2;">
+      <div class="jurnal-baris">
+        <select class="jb-akun">
           <option value="">-- pilih akun --</option>
           ${akunOptionsHtml}
         </select>
-        <input type="number" step="0.01" class="jb-debit" placeholder="Debit" style="flex:1;" />
-        <input type="number" step="0.01" class="jb-kredit" placeholder="Kredit" style="flex:1;" />
-        <button type="button" class="btn btn-outline btn-sm jb-hapus">&times;</button>
+        <input type="number" step="0.01" class="jb-debit uang-input" placeholder="Debit" />
+        <input type="number" step="0.01" class="jb-kredit uang-input" placeholder="Kredit" />
+        <button type="button" class="btn btn-outline btn-sm jb-hapus" title="Hapus baris">&times;</button>
       </div>`;
   }
 
@@ -102,6 +102,7 @@ class JurnalUmumModule {
 
     Modal.open({
       title: 'Tambah Jurnal Umum',
+      size: 'lg',
       bodyHtml: `
         <div class="form-group">
           <label for="ju-departemen">Departemen</label>
@@ -117,12 +118,18 @@ class JurnalUmumModule {
           <label for="ju-keterangan">Keterangan</label>
           <textarea id="ju-keterangan" required></textarea>
         </div>
-        <div id="ju-baris-container">
-          ${this._barisHtml(akunOptionsHtml)}
-          ${this._barisHtml(akunOptionsHtml)}
+        <div class="form-group" style="margin-bottom: var(--space-2);">
+          <label>Baris Jurnal</label>
+          <div class="jurnal-baris jurnal-baris--head">
+            <span>Akun</span><span>Debit</span><span>Kredit</span><span></span>
+          </div>
+          <div id="ju-baris-container">
+            ${this._barisHtml(akunOptionsHtml)}
+            ${this._barisHtml(akunOptionsHtml)}
+          </div>
         </div>
         <button type="button" id="ju-tambah-baris" class="btn btn-outline btn-sm">+ Tambah Baris</button>
-        <div id="ju-balance-info" class="text-muted" style="margin-top: var(--space-2);"></div>
+        <div id="ju-balance-info" class="text-muted" style="margin-top: var(--space-3);"></div>
       `,
       onSubmit: async (_data, close) => {
         const overlay = document.querySelector('.modal-overlay');
