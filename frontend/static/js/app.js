@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function _renderLoginScreen(content) {
   content.innerHTML = `
     <div class="panel" style="max-width: 360px; margin: var(--space-8) auto;">
-      <div class="panel__header"><span>Login JIBAS Keuangan</span></div>
+      <div class="panel__header"><span>Login Brilliant Finance</span></div>
       <div class="panel__body">
         ${FormBuilder.render([
           { name: 'login', label: 'Login', required: true },

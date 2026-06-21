@@ -11,7 +11,7 @@ from app.routers import inventory, jurnal_umum, laporan, pengaturan, pengeluaran
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
-app = FastAPI(title="JIBAS Keuangan", version="0.1.0")
+app = FastAPI(title="Brilliant Finance", version="0.1.0")
 
 
 @app.on_event("startup")
