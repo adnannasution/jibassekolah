@@ -13,6 +13,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from app.core.audit import catat_audit
 from app.core.ledger import BarisJurnal, batalkan_jurnal, posting_jurnal
 from app.models.audit import AksiAudit, AuditLog
 from app.models.ledger import SumberModul
@@ -74,6 +75,10 @@ def buat_pengeluaran(db: Session, request: BuatPengeluaranRequest, petugas_id: i
     db.add(pengeluaran)
     db.flush()
     header.sumber_id = pengeluaran.id
+    catat_audit(
+        db, tabel="pengeluaran", record_id=pengeluaran.id, aksi=AksiAudit.BUAT, user_id=petugas_id,
+        data_baru={"no_kuitansi": pengeluaran.no_kuitansi, "jumlah": str(pengeluaran.jumlah)},
+    )
     return pengeluaran
 
 
