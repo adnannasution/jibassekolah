@@ -95,7 +95,7 @@ class JurnalUmumModule {
     ]);
     const aktif = this._tahunBukuAktif(tahunBuku);
     if (!aktif) {
-      window.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
+      Modal.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
       return;
     }
     const akunOptionsHtml = akun.map(a => `<option value="${a.id}">${a.kode} - ${a.nama}</option>`).join('');
@@ -171,7 +171,7 @@ class JurnalUmumModule {
     const wireRow = (row) => {
       row.querySelector('.jb-hapus').addEventListener('click', () => {
         if (overlay.querySelectorAll('.jurnal-baris').length <= 2) {
-          window.alert('Minimal 2 baris jurnal.');
+          Modal.alert('Minimal 2 baris jurnal.');
           return;
         }
         row.remove();
@@ -200,7 +200,7 @@ class JurnalUmumModule {
       await this.api.post(`/jurnal-umum/jurnal/${jurnalHeaderId}/batalkan?user_id=${Auth.userId()}`, { alasan });
       this._muatData();
     } catch (err) {
-      window.alert(`Gagal membatalkan: ${err.message}`);
+      Modal.alert(`Gagal membatalkan: ${err.message}`);
     }
   }
 

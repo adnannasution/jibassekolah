@@ -140,12 +140,12 @@ class PengeluaranModule {
         this.api.get('/pengeluaran/jenis-pengeluaran'), this._muatTahunBuku(),
       ]);
       if (!jenis.length) {
-        window.alert('Belum ada Jenis Pengeluaran. Tambahkan dulu di tab Jenis Pengeluaran.');
+        Modal.alert('Belum ada Jenis Pengeluaran. Tambahkan dulu di tab Jenis Pengeluaran.');
         return;
       }
       const aktif = this._tahunBukuAktif(tahunBuku);
       if (!aktif) {
-        window.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
+        Modal.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
         return;
       }
       Modal.open({
@@ -181,7 +181,7 @@ class PengeluaranModule {
       await this.api.post(`/pengeluaran/pengeluaran/${pengeluaranId}/batalkan?user_id=${Auth.userId()}`, { alasan });
       this._muatData();
     } catch (err) {
-      window.alert(`Gagal membatalkan: ${err.message}`);
+      Modal.alert(`Gagal membatalkan: ${err.message}`);
     }
   }
 
