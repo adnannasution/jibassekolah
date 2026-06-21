@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   router.register('pengeluaran', PengeluaranModule, 'Pengeluaran', '💸');
   router.register('jurnal-umum', JurnalUmumModule, 'Jurnal Umum', '📝');
   router.register('laporan', LaporanModule, 'Laporan Keuangan', '📊');
-  // router.register('inventory', InventoryModule, 'Inventory', '📦');
+  router.register('inventory', InventoryModule, 'Inventory', '📦');
   // router.register('pengaturan', PengaturanModule, 'Pengaturan', '⚙️');
 
   router.start('referensi');
