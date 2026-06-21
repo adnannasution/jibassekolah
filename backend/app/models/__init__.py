@@ -10,3 +10,4 @@ from app.models.penerimaan import (  # noqa: F401
 from app.models.pengeluaran import (  # noqa: F401
     JenisPengeluaran, Pengeluaran, StatusPengeluaran,
 )
+from app.models.inventory import GroupBarang, Barang  # noqa: F401
