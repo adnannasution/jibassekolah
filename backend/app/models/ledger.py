@@ -1,7 +1,8 @@
 """Model Jurnal: JurnalHeader (per transaksi) + JurnalDetail (baris debit/kredit)."""
 import enum
 from sqlalchemy import (
-    Column, Integer, String, Date, DateTime, Text, ForeignKey, Enum, Numeric, func
+    Column, Integer, String, Date, DateTime, Text, ForeignKey, Enum, Numeric,
+    UniqueConstraint, func,
 )
 from sqlalchemy.orm import relationship
 
@@ -23,8 +24,12 @@ class StatusJurnal(str, enum.Enum):
 class JurnalHeader(Base):
     __tablename__ = "jurnal_header"
 
+    __table_args__ = (
+        UniqueConstraint("tahun_buku_id", "no_jurnal", name="uq_jurnal_header_tahun_buku_no_jurnal"),
+    )
+
     id = Column(Integer, primary_key=True)
-    no_jurnal = Column(String(30), unique=True, nullable=False)
+    no_jurnal = Column(String(30), nullable=False)
     tanggal = Column(Date, nullable=False)
     departemen_id = Column(Integer, ForeignKey("departemen.id"), nullable=False)
     tahun_buku_id = Column(Integer, ForeignKey("tahun_buku.id"), nullable=False)

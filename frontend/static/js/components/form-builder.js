@@ -1,7 +1,7 @@
 /**
  * FormBuilder — generate form dari definisi field, dipakai di dalam Modal.
  *
- * fields: [{ name, label, type: 'text'|'number'|'date'|'select'|'uang'|'textarea',
+ * fields: [{ name, label, type: 'text'|'number'|'date'|'select'|'uang'|'textarea'|'checkbox',
  *            options?: [{value,label}], required?: bool, value?: any }]
  */
 class FormBuilder {
@@ -20,6 +20,17 @@ class FormBuilder {
             <select id="f_${f.name}" name="${f.name}" ${required}>
               <option value="">-- pilih --</option>${opts}
             </select>
+          </div>`;
+      }
+
+      if (f.type === 'checkbox') {
+        const checked = value ? 'checked' : '';
+        return `
+          <div class="form-group form-group--checkbox">
+            <label for="f_${f.name}">
+              <input id="f_${f.name}" name="${f.name}" type="checkbox" value="true" ${checked} />
+              ${f.label}
+            </label>
           </div>`;
       }
 
@@ -45,6 +56,10 @@ class FormBuilder {
   /** Ambil semua nilai field dari sebuah <form> jadi object plain. */
   static collect(formEl) {
     const data = new FormData(formEl);
-    return Object.fromEntries(data.entries());
+    const result = Object.fromEntries(data.entries());
+    formEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      result[cb.name] = cb.checked;
+    });
+    return result;
   }
 }
