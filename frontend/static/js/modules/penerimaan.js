@@ -106,7 +106,8 @@ class PenerimaanModule {
           { key: 'aksi', label: '', type: 'aksi', render: (row) => row.status === 'BELUM_LUNAS'
               ? `<button class="btn btn-outline btn-sm" data-bayar="${row.id}">Bayar</button>`
               : '' },
-        ], data, { emptyMessage: 'Belum ada tagihan. Tambahkan dulu lewat tombol + Tambah.' });
+        ], data, { emptyMessage: 'Belum ada tagihan. Tambahkan dulu lewat tombol + Tambah.', searchable: true, searchPlaceholder: 'Cari no. tagihan...' });
+        TableRenderer.attachSearch(target);
 
         target.querySelectorAll('[data-bayar]').forEach(btn => {
           btn.addEventListener('click', () => this._bukaFormBayar(Number(btn.dataset.bayar)));
@@ -118,7 +119,8 @@ class PenerimaanModule {
           { key: 'jumlah_bayar', label: 'Jumlah Bayar', type: 'uang' },
           { key: 'status', label: 'Status', type: 'badge', badgeMap: { AKTIF: 'success', DIBATALKAN: 'danger' } },
           { key: 'keterangan', label: 'Keterangan' },
-        ], data, { emptyMessage: 'Belum ada pembayaran tercatat.' });
+        ], data, { emptyMessage: 'Belum ada pembayaran tercatat.', searchable: true, searchPlaceholder: 'Cari keterangan...' });
+        TableRenderer.attachSearch(target);
       }
     } catch (err) {
       target.innerHTML = `<div class="empty-state">Gagal memuat data: ${err.message}</div>`;
