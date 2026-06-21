@@ -5,11 +5,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from app.core.seed import seed_admin_pertama
+from app.database import SessionLocal
 from app.routers import inventory, jurnal_umum, laporan, pengaturan, pengeluaran, penerimaan, referensi, siswa
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 app = FastAPI(title="JIBAS Keuangan", version="0.1.0")
+
+
+@app.on_event("startup")
+def _seed_admin_pertama():
+    db = SessionLocal()
+    try:
+        seed_admin_pertama(db)
+    finally:
+        db.close()
 
 app.add_middleware(
     CORSMiddleware,
