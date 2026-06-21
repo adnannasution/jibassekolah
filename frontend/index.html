@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/static/css/print.css" />
 </head>
 <body>
-  <div class="app-shell">
+  <div class="app-shell" id="app-shell" style="display:none;">
     <aside class="sidebar">
       <div class="sidebar__brand">
         <div class="sidebar__brand-title">Brilliant Finance</div>
@@ -21,6 +21,16 @@
     <main class="main">
       <div class="main__content" id="main-content"></div>
     </main>
+  </div>
+
+  <div class="login-screen" id="login-screen" style="display:none;">
+    <div class="login-screen__brand">
+      <div class="login-screen__brand-title">Brilliant Finance</div>
+      <div class="login-screen__brand-sub">Sistem Informasi Keuangan Sekolah</div>
+    </div>
+    <div class="login-screen__panel">
+      <div class="login-screen__card panel" id="login-screen-card"></div>
+    </div>
   </div>
 
   <!-- Core -->
