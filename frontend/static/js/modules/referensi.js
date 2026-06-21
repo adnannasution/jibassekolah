@@ -170,7 +170,7 @@ class ReferensiModule {
       `,
       onSubmit: async (data, close) => {
         const hasil = await this.api.post(
-          `/referensi/tutup-buku?petugas_id=1`, // TODO: ganti ke user login saat modul Pengaturan jadi
+          `/referensi/tutup-buku?petugas_id=${Auth.userId()}`,
           {
             departemen_id: tahunBukuAktif.departemen_id,
             tahun_buku_lama_id: tahunBukuAktif.id,
