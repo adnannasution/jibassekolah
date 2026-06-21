@@ -17,11 +17,13 @@ a { color: var(--color-primary); }
 /* ----- Layout shell ----- */
 .app-shell {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
   width: var(--sidebar-width);
+  height: 100vh;
   flex-shrink: 0;
   background: var(--color-primary);
   color: #EDF1F7;
@@ -82,6 +84,8 @@ a { color: var(--color-primary); }
 .main {
   flex: 1;
   min-width: 0;
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -391,6 +395,7 @@ select:focus {
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
 
 @media (max-width: 768px) {
-  .app-shell { flex-direction: column; }
-  .sidebar { width: 100%; }
+  .app-shell { flex-direction: column; height: auto; overflow: visible; }
+  .sidebar { width: 100%; height: auto; }
+  .main { height: auto; overflow-y: visible; }
 }
