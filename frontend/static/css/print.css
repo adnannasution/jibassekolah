@@ -1,0 +1,32 @@
+/* ===== Print helper — dipakai Kuitansi Pengeluaran & Export Laporan ke PDF =====
+   Strategi: browser-native print (window.print() + @media print), tanpa
+   dependency PDF baru. User pakai "Save as PDF" bawaan browser dialog print. */
+#print-area { display: none; }
+
+@media print {
+  body * { visibility: hidden; }
+  #print-area, #print-area * { visibility: visible; }
+  #print-area {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+  .no-print { display: none !important; }
+
+  #print-area table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #print-area th, #print-area td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    text-align: left;
+  }
+  #print-area .num, #print-area .uang {
+    text-align: right;
+  }
+  #print-area .table-search { display: none; }
+}

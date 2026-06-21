@@ -81,7 +81,8 @@ class SiswaModule {
           { key: 'status', label: 'Status', type: 'badge', badgeMap: {
               AKTIF: 'success', LULUS: 'neutral', KELUAR: 'danger',
           } },
-        ], data, { emptyMessage: 'Belum ada siswa terdaftar.' });
+        ], data, { emptyMessage: 'Belum ada siswa terdaftar.', searchable: true, searchPlaceholder: 'Cari NIS/nama...' });
+        TableRenderer.attachSearch(target);
       } else if (this.tab === 'kelompok-calon-siswa') {
         const data = await this.api.get('/siswa/kelompok-calon-siswa');
         target.innerHTML = TableRenderer.render([
@@ -95,7 +96,8 @@ class SiswaModule {
           { key: 'proses', label: 'Proses' },
           { key: 'hp', label: 'No. HP' },
           { key: 'tanggal_daftar', label: 'Tanggal Daftar' },
-        ], data, { emptyMessage: 'Belum ada calon siswa terdaftar.' });
+        ], data, { emptyMessage: 'Belum ada calon siswa terdaftar.', searchable: true, searchPlaceholder: 'Cari no. registrasi/nama...' });
+        TableRenderer.attachSearch(target);
       }
     } catch (err) {
       target.innerHTML = `<div class="empty-state">Gagal memuat data: ${err.message}</div>`;

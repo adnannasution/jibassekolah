@@ -12,11 +12,12 @@ class TableRenderer {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
   }
 
-  static render(columns, data, { emptyMessage = 'Belum ada data.' } = {}) {
+  static render(columns, data, { emptyMessage = 'Belum ada data.', searchable = false, searchPlaceholder = 'Cari...' } = {}) {
     if (!data || data.length === 0) {
       return `<div class="empty-state">${emptyMessage}</div>`;
     }
 
+    const tableId = `tbl-${Math.random().toString(36).slice(2, 9)}`;
     const thead = columns.map(c => `<th class="${c.type === 'uang' ? 'num' : ''}">${c.label}</th>`).join('');
 
     const rows = data.map(row => {
@@ -39,11 +40,32 @@ class TableRenderer {
       return `<tr data-id="${row.id ?? ''}">${cells}</tr>`;
     }).join('');
 
+    const searchHtml = searchable ? `
+      <div class="table-search">
+        <input type="text" class="table-search__input" data-table-search="${tableId}" placeholder="${searchPlaceholder}" />
+      </div>
+    ` : '';
+
     return `
-      <table class="data-table">
+      ${searchHtml}
+      <table class="data-table" id="${tableId}">
         <thead><tr>${thead}</tr></thead>
         <tbody>${rows}</tbody>
       </table>
     `;
+  }
+
+  /** Pasang listener search client-side. Panggil SETELAH innerHTML diisi hasil render(). */
+  static attachSearch(container) {
+    container.querySelectorAll('[data-table-search]').forEach(input => {
+      const table = container.querySelector(`#${input.dataset.tableSearch}`);
+      if (!table) return;
+      input.addEventListener('input', () => {
+        const kata = input.value.trim().toLowerCase();
+        table.querySelectorAll('tbody tr').forEach(tr => {
+          tr.style.display = tr.textContent.toLowerCase().includes(kata) ? '' : 'none';
+        });
+      });
+    });
   }
 }

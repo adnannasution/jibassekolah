@@ -47,6 +47,8 @@ class PengeluaranOut(BaseModel):
     jumlah: Decimal
     status: StatusPengeluaran
     keterangan: Optional[str] = None
+    petugas_id: int
+    jenis_pengeluaran: Optional[JenisPengeluaranOut] = None
 
 
 class BatalkanPengeluaranRequest(BaseModel):
