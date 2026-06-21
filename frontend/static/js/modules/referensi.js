@@ -148,7 +148,7 @@ class ReferensiModule {
   async _bukaFormTutupBuku(tahunBukuAktif) {
     const akunList = await this.api.get('/referensi/akun?kategori=MODAL');
     if (!akunList.length) {
-      window.alert('Belum ada akun kategori MODAL. Tambahkan dulu akun Laba Ditahan di tab Kode Rekening Perkiraan.');
+      Modal.alert('Belum ada akun kategori MODAL. Tambahkan dulu akun Laba Ditahan di tab Kode Rekening Perkiraan.');
       return;
     }
     Modal.open({
@@ -182,8 +182,8 @@ class ReferensiModule {
           }
         );
         close();
-        window.alert(
-          `Tutup buku berhasil.\nLaba/rugi ${tahunBukuAktif.tahun_buku}: Rp ${TableRenderer.formatUang(hasil.laba_rugi_tahun_lama)}\nTahun buku aktif sekarang: ${hasil.tahun_buku_baru}`
+        Modal.alert(
+          `Tutup buku berhasil.<br>Laba/rugi ${tahunBukuAktif.tahun_buku}: Rp ${TableRenderer.formatUang(hasil.laba_rugi_tahun_lama)}<br>Tahun buku aktif sekarang: ${hasil.tahun_buku_baru}`
         );
         this._muatData();
       },

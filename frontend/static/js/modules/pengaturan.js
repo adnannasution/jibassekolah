@@ -108,7 +108,7 @@ class PengaturanModule {
       onSubmit: async (data, close) => {
         await this.api.post(`/pengaturan/users/${userId}/ganti-password`, { password_baru: data.password_baru });
         close();
-        window.alert('Password berhasil diganti.');
+        Modal.alert('Password berhasil diganti.');
       },
     });
   }

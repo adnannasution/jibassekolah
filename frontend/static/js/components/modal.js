@@ -58,4 +58,32 @@ class Modal {
   static confirm(message) {
     return window.confirm(message);
   }
+
+  static alert(message, title = 'Pemberitahuan') {
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML = `
+        <div class="modal" style="max-width: 380px;">
+          <div class="modal__header">
+            <h2>${title}</h2>
+            <button class="modal__close" type="button">&times;</button>
+          </div>
+          <div class="modal__body">${message}</div>
+          <div class="modal__footer">
+            <button type="button" class="btn btn-primary" data-action="ok">OK</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const close = () => {
+        overlay.remove();
+        resolve();
+      };
+      overlay.querySelector('.modal__close').addEventListener('click', close);
+      overlay.querySelector('[data-action="ok"]').addEventListener('click', close);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    });
+  }
 }

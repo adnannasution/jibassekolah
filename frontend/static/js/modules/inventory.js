@@ -122,7 +122,7 @@ class InventoryModule {
     } else if (this.tab === 'barang') {
       const group = await this._muatGroup();
       if (!group.length) {
-        window.alert('Belum ada group barang. Tambahkan dulu di tab Group Barang.');
+        Modal.alert('Belum ada group barang. Tambahkan dulu di tab Group Barang.');
         return;
       }
       Modal.open({

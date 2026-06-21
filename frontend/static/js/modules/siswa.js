@@ -124,7 +124,7 @@ class SiswaModule {
     } else if (this.tab === 'siswa') {
       const kelas = await this.api.get('/siswa/kelas');
       if (!kelas.length) {
-        window.alert('Belum ada Kelas. Tambahkan dulu di tab Kelas.');
+        Modal.alert('Belum ada Kelas. Tambahkan dulu di tab Kelas.');
         return;
       }
       Modal.open({
@@ -165,7 +165,7 @@ class SiswaModule {
     } else if (this.tab === 'calon-siswa') {
       const kelompok = await this.api.get('/siswa/kelompok-calon-siswa');
       if (!kelompok.length) {
-        window.alert('Belum ada Kelompok Calon Siswa. Tambahkan dulu di tab Kelompok Calon Siswa.');
+        Modal.alert('Belum ada Kelompok Calon Siswa. Tambahkan dulu di tab Kelompok Calon Siswa.');
         return;
       }
       Modal.open({

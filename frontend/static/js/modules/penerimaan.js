@@ -160,16 +160,16 @@ class PenerimaanModule {
         this._muatSiswa(), this.api.get('/penerimaan/jenis-pembayaran'), this._muatAkun(), this._muatTahunBuku(),
       ]);
       if (!siswa.length) {
-        window.alert('Belum ada Siswa. Tambahkan dulu di modul Siswa & Calon Siswa.');
+        Modal.alert('Belum ada Siswa. Tambahkan dulu di modul Siswa & Calon Siswa.');
         return;
       }
       if (!jenis.length) {
-        window.alert('Belum ada Jenis Pembayaran. Tambahkan dulu di tab Jenis Pembayaran.');
+        Modal.alert('Belum ada Jenis Pembayaran. Tambahkan dulu di tab Jenis Pembayaran.');
         return;
       }
       const aktif = this._tahunBukuAktif(tahunBuku);
       if (!aktif) {
-        window.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
+        Modal.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
         return;
       }
       Modal.open({
@@ -215,7 +215,7 @@ class PenerimaanModule {
     const tagihan = tagihanList.find(t => t.id === tagihanId);
     const aktif = this._tahunBukuAktif(tahunBuku);
     if (!aktif) {
-      window.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
+      Modal.alert('Belum ada Tahun Buku aktif. Buat dulu di modul Referensi.');
       return;
     }
     Modal.open({
