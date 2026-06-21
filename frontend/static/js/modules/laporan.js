@@ -13,6 +13,8 @@ class LaporanModule {
     this._akunCache = null;
     this._tahunBukuId = null;
     this._akunIdBukuBesar = null;
+    this._pgBukuBesar = { cari: '', halaman: 1 };
+    this._pgAuditLog = { cari: '', halaman: 1 };
   }
 
   async render() {
@@ -67,6 +69,7 @@ class LaporanModule {
     if (filterTahun) {
       filterTahun.addEventListener('change', () => {
         this._tahunBukuId = Number(filterTahun.value);
+        this._pgBukuBesar.halaman = 1;
         this._muatData();
       });
     }
@@ -79,6 +82,7 @@ class LaporanModule {
       filterAkun.value = this._akunIdBukuBesar;
       filterAkun.addEventListener('change', () => {
         this._akunIdBukuBesar = Number(filterAkun.value);
+        this._pgBukuBesar.halaman = 1;
         this._muatData();
       });
     }
@@ -122,15 +126,26 @@ class LaporanModule {
     try {
       if (this.tab === 'buku-besar') {
         if (!this._akunIdBukuBesar) { target.innerHTML = '<div class="empty-state">Belum ada akun.</div>'; return; }
-        const data = await this.api.get(`/laporan/buku-besar?akun_id=${this._akunIdBukuBesar}&tahun_buku_id=${this._tahunBukuId}`);
-        target.innerHTML = TableRenderer.render([
+        const qs = new URLSearchParams({
+          akun_id: this._akunIdBukuBesar,
+          tahun_buku_id: this._tahunBukuId,
+          halaman: this._pgBukuBesar.halaman,
+          ukuran_halaman: 20,
+        });
+        if (this._pgBukuBesar.cari) qs.set('cari', this._pgBukuBesar.cari);
+        const hasil = await this.api.get(`/laporan/buku-besar?${qs.toString()}`);
+        target.innerHTML = Pagination.renderControls({
+          cari: this._pgBukuBesar.cari, halaman: hasil.halaman, total: hasil.total, ukuranHalaman: hasil.ukuran_halaman,
+          searchPlaceholder: 'Cari no. jurnal / keterangan...',
+        }) + TableRenderer.render([
           { key: 'tanggal', label: 'Tanggal' },
           { key: 'no_jurnal', label: 'No. Jurnal' },
           { key: 'keterangan', label: 'Keterangan' },
           { key: 'debit', label: 'Debit', type: 'uang' },
           { key: 'kredit', label: 'Kredit', type: 'uang' },
           { key: 'saldo', label: 'Saldo', type: 'uang' },
-        ], data, { emptyMessage: 'Belum ada mutasi untuk akun & tahun buku ini.' });
+        ], hasil.items, { emptyMessage: 'Belum ada mutasi untuk akun & tahun buku ini.' });
+        Pagination.attach(target, this._pgBukuBesar, () => this._muatData());
       } else if (this.tab === 'neraca-percobaan') {
         const data = await this.api.get(`/laporan/neraca-percobaan?tahun_buku_id=${this._tahunBukuId}`);
         target.innerHTML = TableRenderer.render([
@@ -201,14 +216,20 @@ class LaporanModule {
           <p><strong>Total Mutasi Bersih: ${TableRenderer.formatUang(ak.total_mutasi_bersih)}</strong></p>
         `;
       } else if (this.tab === 'audit-log') {
-        const data = await this.api.get('/laporan/audit-log');
-        target.innerHTML = TableRenderer.render([
+        const qs = new URLSearchParams({ halaman: this._pgAuditLog.halaman, ukuran_halaman: 20 });
+        if (this._pgAuditLog.cari) qs.set('cari', this._pgAuditLog.cari);
+        const hasil = await this.api.get(`/laporan/audit-log?${qs.toString()}`);
+        target.innerHTML = Pagination.renderControls({
+          cari: this._pgAuditLog.cari, halaman: hasil.halaman, total: hasil.total, ukuranHalaman: hasil.ukuran_halaman,
+          searchPlaceholder: 'Cari tabel / alasan...',
+        }) + TableRenderer.render([
           { key: 'tabel', label: 'Tabel' },
           { key: 'record_id', label: 'ID Record' },
           { key: 'aksi', label: 'Aksi', type: 'badge', badgeMap: { EDIT: 'warning', HAPUS: 'danger' } },
           { key: 'alasan', label: 'Alasan' },
           { key: 'created_at', label: 'Waktu' },
-        ], data, { emptyMessage: 'Belum ada perubahan/pembatalan yang tercatat.' });
+        ], hasil.items, { emptyMessage: 'Belum ada perubahan/pembatalan yang tercatat.' });
+        Pagination.attach(target, this._pgAuditLog, () => this._muatData());
       }
     } catch (err) {
       target.innerHTML = `<div class="empty-state">Gagal memuat data: ${err.message}</div>`;

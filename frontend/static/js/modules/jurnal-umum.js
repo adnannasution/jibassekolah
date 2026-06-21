@@ -11,6 +11,7 @@ class JurnalUmumModule {
     this._departemenCache = null;
     this._akunCache = null;
     this._tahunBukuCache = null;
+    this._pg = { cari: '', halaman: 1 };
   }
 
   async render() {
@@ -55,8 +56,18 @@ class JurnalUmumModule {
   async _muatData() {
     const target = this.container.querySelector('#tab-content');
     try {
-      const data = await this.api.get('/jurnal-umum/jurnal?sumber_modul=JURNAL_UMUM');
-      target.innerHTML = TableRenderer.render([
+      const qs = new URLSearchParams({
+        sumber_modul: 'JURNAL_UMUM',
+        halaman: this._pg.halaman,
+        ukuran_halaman: 20,
+      });
+      if (this._pg.cari) qs.set('cari', this._pg.cari);
+      const hasil = await this.api.get(`/jurnal-umum/jurnal?${qs.toString()}`);
+      const data = hasil.items;
+      target.innerHTML = Pagination.renderControls({
+        cari: this._pg.cari, halaman: hasil.halaman, total: hasil.total, ukuranHalaman: hasil.ukuran_halaman,
+        searchPlaceholder: 'Cari no. jurnal / keterangan...',
+      }) + TableRenderer.render([
         { key: 'no_jurnal', label: 'No. Jurnal' },
         { key: 'tanggal', label: 'Tanggal' },
         { key: 'keterangan', label: 'Keterangan' },
@@ -68,6 +79,7 @@ class JurnalUmumModule {
             : '' },
       ], data, { emptyMessage: 'Belum ada jurnal umum. Tambahkan dulu lewat tombol + Tambah Jurnal.' });
 
+      Pagination.attach(target, this._pg, () => this._muatData());
       target.querySelectorAll('[data-batal]').forEach(btn => {
         btn.addEventListener('click', () => this._batalkanJurnal(Number(btn.dataset.batal)));
       });
