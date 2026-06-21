@@ -6,29 +6,31 @@
 document.addEventListener('DOMContentLoaded', () => {
   Theme.terapkan();
 
-  const content = document.getElementById('main-content');
-  const nav = document.getElementById('sidebar-nav');
+  const appShell = document.getElementById('app-shell');
+  const loginScreen = document.getElementById('login-screen');
 
   if (!Auth.getUser()) {
-    _renderLoginScreen(content);
+    loginScreen.style.display = 'flex';
+    _renderLoginScreen(document.getElementById('login-screen-card'));
     return;
   }
 
+  appShell.style.display = 'flex';
+  const content = document.getElementById('main-content');
+  const nav = document.getElementById('sidebar-nav');
   _mulaiApp(content, nav);
 });
 
 function _renderLoginScreen(content) {
   content.innerHTML = `
-    <div class="panel" style="max-width: 360px; margin: var(--space-8) auto;">
-      <div class="panel__header"><span>Login Brilliant Finance</span></div>
-      <div class="panel__body">
-        ${FormBuilder.render([
-          { name: 'login', label: 'Login', required: true },
-          { name: 'password', label: 'Password', type: 'password', required: true },
-        ])}
-        <div id="login-error" class="text-muted" style="color: var(--color-danger, #b00020); display:none;"></div>
-        <button class="btn btn-primary" id="btn-login" style="margin-top: var(--space-3);">Masuk</button>
-      </div>
+    <div class="panel__header"><span>Login Brilliant Finance</span></div>
+    <div class="panel__body">
+      ${FormBuilder.render([
+        { name: 'login', label: 'Login', required: true },
+        { name: 'password', label: 'Password', type: 'password', required: true },
+      ])}
+      <div id="login-error" class="text-muted" style="color: var(--color-danger); display:none;"></div>
+      <button class="btn btn-primary" id="btn-login" style="margin-top: var(--space-3); width: 100%; justify-content: center;">Masuk</button>
     </div>
   `;
   content.querySelector('#btn-login').addEventListener('click', async () => {

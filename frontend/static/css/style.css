@@ -97,6 +97,48 @@ a { color: var(--color-primary); }
   margin: 0 auto;
 }
 
+/* ----- Halaman login (standalone, tanpa sidebar app) ----- */
+.login-screen {
+  height: 100vh;
+}
+.login-screen__brand {
+  width: 380px;
+  flex-shrink: 0;
+  background: var(--color-primary);
+  color: var(--color-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-8);
+}
+.login-screen__brand-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.login-screen__brand-title::before {
+  content: "◆ ";
+  color: var(--color-accent);
+}
+.login-screen__brand-sub {
+  font-size: var(--text-sm);
+  color: rgba(237,241,247,0.7);
+  margin-top: var(--space-2);
+}
+.login-screen__panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: var(--space-4);
+}
+.login-screen__card {
+  max-width: 400px;
+  width: 100%;
+}
+
 /* ----- Page header ----- */
 .page-header { margin-bottom: var(--space-5); }
 .breadcrumb {
@@ -398,4 +440,7 @@ select:focus {
   .app-shell { flex-direction: column; height: auto; overflow: visible; }
   .sidebar { width: 100%; height: auto; }
   .main { height: auto; overflow-y: visible; }
+
+  .login-screen { flex-direction: column; height: auto; min-height: 100vh; }
+  .login-screen__brand { width: 100%; padding: var(--space-6) var(--space-4); }
 }
