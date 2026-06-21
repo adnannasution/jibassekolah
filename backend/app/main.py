@@ -7,7 +7,10 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.seed import seed_admin_pertama
 from app.database import SessionLocal
-from app.routers import inventory, jurnal_umum, laporan, pengaturan, pengeluaran, penerimaan, referensi, siswa
+from app.routers import (
+    dashboard, inventory, jurnal_umum, laporan, laporan_penerimaan, pengaturan, pengeluaran,
+    penerimaan, referensi, siswa,
+)
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
@@ -35,6 +38,8 @@ app.include_router(penerimaan.router)
 app.include_router(pengeluaran.router)
 app.include_router(jurnal_umum.router)
 app.include_router(laporan.router)
+app.include_router(laporan_penerimaan.router)
+app.include_router(dashboard.router)
 app.include_router(inventory.router)
 app.include_router(pengaturan.router)
 

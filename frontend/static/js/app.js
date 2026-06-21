@@ -47,12 +47,14 @@ function _renderLoginScreen(content) {
 function _mulaiApp(content, nav) {
   window.router = new Router(content, nav);
 
+  router.register('dashboard', DashboardModule, 'Dashboard', '🏠');
   router.register('referensi', ReferensiModule, 'Referensi', '📘');
   router.register('siswa', SiswaModule, 'Siswa & Calon Siswa', '🎓');
   router.register('penerimaan', PenerimaanModule, 'Penerimaan', '💰');
   router.register('pengeluaran', PengeluaranModule, 'Pengeluaran', '💸');
   router.register('jurnal-umum', JurnalUmumModule, 'Jurnal Umum', '📝');
   router.register('laporan', LaporanModule, 'Laporan Keuangan', '📊');
+  router.register('laporan-penerimaan', LaporanPenerimaanModule, 'Laporan Penerimaan', '📈');
   router.register('inventory', InventoryModule, 'Inventory', '📦');
   router.register('pengaturan', PengaturanModule, 'Pengaturan', '⚙️');
 
@@ -67,5 +69,5 @@ function _mulaiApp(content, nav) {
     window.location.reload();
   });
 
-  router.start('referensi');
+  router.start('dashboard');
 }
